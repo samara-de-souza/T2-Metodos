@@ -1,0 +1,61 @@
+PONTIFÍCIA UNIVERSIDADE CATÓLICA DO RIO GRANDE DO SUL  
+ESCOLA POLITÉCNICA  
+
+CURSO: Bacharelado em Ciência da Computação  
+DISCIPLINA: Métodos Formais  
+Prof. Júlio Machado  
+Trabalho T2  
+
+A nota do trabalho consiste no trabalho aqui especificado, cujo objetivo é construir especificações  
+e verificações formais na linguagem Dafny para algoritmos sobre estruturas de dados. O  
+trabalho será realizado em grupos de até 5 alunos. O trabalho deve ser entregue via Moodle até  
+a data indicada na sala de entrega de acordo com o cronograma da disciplina.  
+
+O grupo deve entregar um arquivo (.dfy) contendo todo o código-fonte em Danfy e o nome de  
+todos os integrantes.  
+
+Enunciado do Problema:  
+
+Estamos interessados em implementar o tipo abstrato de dados Pilha (sem limite de tamanho)  
+através da implementação concreta utilizando arrays. Observe que é obrigatório o uso de arrays  
+em todas as operações de implementação concreta!  
+
+Para tal será necessário criar uma classe Pilha em Dafny e representar os atributos, métodos,  
+funções e predicados de acordo com as seguintes instruções. Para fins de simplificação,  
+considere a declaração de Pilhas contendo números inteiros e não se preocupe em implementar  
+uma coleção genérica.  
+
+Representação abstrata (via ghost):  
+• Representar a coleção de elementos da pilha.  
+• Representar qualquer outra informação pertinente para a correta verificação de correção  
+  da implementação.  
+
+Invariante de classe (via predicate):  
+• Utilizar um predicado Valid() adequado para a invariante da representação abstrata  
+  associada à coleção do tipo pilha.  
+
+Operações:  
+• Construtor deve instanciar uma pilha vazia.  
+• Adicionar um novo elemento no topo da pilha.  
+• Remover um elemento do topo da pilha, caso ela não esteja vazia.  
+• Ler o valor do topo da pilha, sem removê-lo, caso a pilha não esteja vazia.  
+• Verificar se a pilha está vazia ou não.  
+• Consultar o número de elementos armazenados na pilha.  
+• Inverter a ordem dos elementos da pilha.  
+• Empilhar uma pilha sobre outra, retornando uma nova pilha, sem alterar as pilhas  
+  fornecidas como argumento.  
+
+Todas as pré-condições, pós-condições, invariantes e variantes devem ser corretamente  
+especificadas. Faz parte da avaliação do trabalho o completo entendimento de quais asserções  
+devem fazer parte da especificação das operações solicitadas sobre a estrutura de dados.  
+
+Por fim, construa um pequeno método “Main” demonstrando o uso das operações  
+implementadas e verificando asserções (no estilo de teste unitário) para um número de casos  
+que garantam uma cobertura razoável.  
+
+Observações:  
+• LEMBRETE: cópia de trabalhos é plágio, sujeito a processo disciplinar. Os trabalhos  
+  envolvidos em fraudes receberão nota 0,0 (zero).  
+• Dúvidas devem ser esclarecidas com o professor.  
+• Não serão aceitos trabalhos entregues além da data limite.  
+• Não serão aceitos trabalho entregues via correio eletrônico.
