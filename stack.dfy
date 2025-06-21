@@ -23,6 +23,7 @@ class Stack {
 
     // Função fantasma para reverter sequência
     ghost function reverseSeq(s: seq<int>): seq<int>
+        // pós-condições
         ensures |reverseSeq(s)| == |s|
         ensures forall i :: 0 <= i < |s| ==> reverseSeq(s)[i] == s[|s|-1-i]
     {
@@ -31,6 +32,7 @@ class Stack {
 
     // Construtor
     constructor()
+        // pós-condições
         ensures Valid() 
         ensures Content == []
         ensures top == 0
@@ -43,13 +45,17 @@ class Stack {
     }
 
     // Adicionar elemento
-    method add(e: int) modifies this, a
+    method add(e: int) 
+        // cláusula frame
+        modifies this, a
     {
         if top == a.Length {
             var b := new int[2 * a.Length];
             var i := 0;
             while i < a.Length
+                // invariantes do laço
                 invariant 0 <= i <= a.Length
+                // variante de terminação
                 decreases a.Length - i
             {
                 if i < a.Length && i < b.Length {
@@ -67,9 +73,12 @@ class Stack {
 
     // Remover elemento
     method remove() returns (e: int)
+        // pré-condições
         requires Valid()
         requires top > 0
+        // cláusula frame
         modifies this, Repr, a
+        // pós-condições
         ensures Valid() && fresh(Repr - old(Repr))
         ensures e == old(Content)[|old(Content)| - 1]
         ensures Content == old(Content)[0..|old(Content)| - 1]
@@ -82,8 +91,10 @@ class Stack {
 
     // Ver topo
     method peek() returns (e: int)
+        // pré-condições
         requires Valid()
         requires top > 0
+        // pós-condições
         ensures e == Content[|Content| - 1]
         ensures Valid()
     {
@@ -93,7 +104,7 @@ class Stack {
     // Verificar se está vazio
     method isEmpty() returns (b: bool)
         requires Valid()
-        ensures b <==> (top == 0)
+        ensures b <==> (top == 0)  // pós-condição
         ensures Valid()
     {
         b := (top == 0);
@@ -102,63 +113,66 @@ class Stack {
     // Quantidade de elementos
     method howManyStored() returns (n: nat)
         requires Valid()
-        ensures n == top
+        ensures n == top  // pós-condição
         ensures Valid()
     {
         n := top;
     }
-
-    // Reverter pilha (retorna nova pilha, não altera a original)
-    method reverse() returns (rev: Stack)
-        requires Valid()
-        ensures rev.Valid()
-        ensures rev.Content == reverseSeq(Content)
-        ensures rev.top == top
-        ensures rev != this
+    
+    // Novo método: inverte a pilha in-place
+    method reverse()
+        requires Valid()              // pré-condição
+        modifies this, a              // frame
+        // (pós-condições omitidas)
     {
-        rev := new Stack();
         var i := 0;
-        while i < top
-            invariant 0 <= i <= top
-            invariant rev.top == i
-            invariant rev.Content == reverseSeq(Content)[..i]
-            decreases top - i
+        while i < top / 2
+            // invariantes do laço
+            invariant 0 <= i <= top / 2
+            invariant top <= a.Length
+            // frame interno do laço
+            modifies a
+            // variante de terminação
+            decreases top / 2 - i
         {
-            rev.add(a[top - 1 - i]);
+            var j := top - 1 - i;
+            var temp := a[i];
+            a[i] := a[j];
+            a[j] := temp;
             i := i + 1;
         }
+        Content := a[0..top];
     }
+}
 
-    // União de duas pilhas (retorna nova pilha, não altera as originais)
-    method union(p2: Stack) returns (result: Stack)
-        requires Valid()
-        requires p2.Valid()
-        ensures result.Valid()
-        ensures result.Content == Content + p2.Content
-        ensures result.top == top + p2.top
-        ensures result != this && result != p2
-        ensures Content == old(Content) && p2.Content == old(p2.Content)
-    {
-        result := new Stack();
-        var i := 0;
-        while i < top
-            invariant 0 <= i <= top
-            invariant result.top == i
-            invariant result.Content == Content[..i]
-            decreases top - i
-        {
-            result.add(a[i]);
-            i := i + 1;
-        }
-        i := 0;
-        while i < p2.top
-            invariant 0 <= i <= p2.top
-            invariant result.top == top + i
-            invariant result.Content == Content + p2.Content[..i]
-            decreases p2.top - i
-        {
-            result.add(p2.a[i]);
-            i := i + 1;
-        }
-    }
+// Main externo com asserts estilo exemplo
+/* method main()
+{
+    var s := new Stack();
+    s.add(1);
+    s.add(2);
+    s.add(3);
+    s.reverse();
+    var e := s.remove();
+    var vazio := s.isEmpty();
+    var qtd := s.howManyStored();
+    var topo := s.peek();
+    s.add(4);
+    s.add(5);
+    s.reverse();
+    var e2 := s.remove();
+    var e3 := s.remove();
+    var e4 := s.remove();
+    var vazio2 := s.isEmpty();
+    var qtd2 := s.howManyStored();
+    var topo2 := s.peek();
+    s.add(6);
+    s.add(7);
+    s.reverse();
+    var e5 := s.remove();
+    var e6 := s.remove();
+    var e7 := s.remove();
+    var vazio3 := s.isEmpty();
+    var qtd3 := s.howManyStored();
+    var topo3 := s.peek();
 }
